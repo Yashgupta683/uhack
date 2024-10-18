@@ -50,35 +50,32 @@ class HomepageState extends State<Homepage> {
   // Add this method to handle voice command-based navigation
   void _processCommand(String command) {
     if (command.toLowerCase().contains('qr scanner')) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const ScanQRPage()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>ScanQRPage()));
       _voiceAssistant.speak('Opening QR Scanner');
-    } else if (command.toLowerCase().contains('3d navigation')) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const Navigation()));
-      _voiceAssistant.speak('Opening 3D Navigation');
     } else if (command.toLowerCase().contains('live navigation')) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const Livenavigation()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>Livenavigation()));
       _voiceAssistant.speak('Opening Live Navigation');
     } else if (command.toLowerCase().contains('ticket details')) {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const TicketDetails()));
       _voiceAssistant.speak('Showing Ticket Details');
     }else if (command.toLowerCase().contains('login')) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const Navigation()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
       _voiceAssistant.speak('Opening login page');
     }
     else if (command.toLowerCase().contains('register')) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Navigation()));
+          context, MaterialPageRoute(builder: (context) => RegisterPage()));
       _voiceAssistant.speak('Opening registration page');
     }
     else if (command.toLowerCase().contains('chatbot')) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Navigation()));
+          context, MaterialPageRoute(builder: (context) =>Chatbot()));
       _voiceAssistant.speak('Opening chatbot');
     }
     else if (command.toLowerCase().contains('home')) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Navigation()));
+          context, MaterialPageRoute(builder: (context) =>Homepage()));
       _voiceAssistant.speak('back to homepage');
     }
     else {
@@ -340,10 +337,33 @@ class HomepageState extends State<Homepage> {
                     icon: Icons.map_outlined,
                     label: '3D Navigation',
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Navigation()), // Navigate to TicketDetails
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Choose Junction'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                title: const Text('Howrah Junction'),
+                                onTap: () {
+                                  Navigator.push(context,MaterialPageRoute(builder: (context)=>Navigation(url:'https://app.mappedin.com/map/66eafe82ecc9c8000baa8eb4/directions?floor=m_c9f73d9afc417549&location=s_8fd60a2440cbff54&departure=22.583051374860986%2C88.3427290192081%2Cm_c9f73d9afc417549'),),);
+                                  },
+                              ),
+                              ListTile(
+                                title: const Text('Allahabad Junction'),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Navigation(url: 'https://app.mappedin.com/map/671212dde85d7e000b52491b/directions?floor=m_d5bbaad8e0f0a65f&location=s_99d839e6c529c48c&departure=25.46219132495936%2C81.82378617955558%2Cm_d5bbaad8e0f0a65f '), // Update with actual URL
+                                    ),
+                                  );
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -351,10 +371,40 @@ class HomepageState extends State<Homepage> {
                     icon: Icons.directions,
                     label: 'Live Navigation',
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Livenavigation()), // Navigate to TicketDetails
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Choose Junction'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                title: const Text('Howrah Junction'),
+                                onTap: () {
+                                  Navigator.push(context,MaterialPageRoute(builder: (context)=>Livenavigation()),);
+                                },
+                              ),
+                              ListTile(
+                                title: const Text('Allahabad Junction'),
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Livenavigation()),);
+                                },
+                              ),
+                              ListTile(
+                                title: const Text('Bareilly Junction'),
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Livenavigation()),); // Update with actual URL
+                                },
+                              ),
+                              ListTile(
+                                title: const Text('Agra Junction'),
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Livenavigation()),); // Update with actual URL
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     },
                   ),

@@ -4,7 +4,8 @@ import 'package:kodikzee2024/voiceas.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Navigation extends StatefulWidget {
-  const Navigation({super.key});
+  final String url;
+  const Navigation({super.key,required this.url});
 
   @override
   State<StatefulWidget> createState() {
@@ -30,8 +31,6 @@ class NavigationState extends State<Navigation> {
   void initState() {
     super.initState();
 
-
-
     // Initialize WebViewController
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -52,8 +51,7 @@ class NavigationState extends State<Navigation> {
           },
         ),
       )
-      ..loadRequest(Uri.parse('https://app.mappedin.com/map/66eafe82ecc9c8000baa8eb4/directions?floor=m_c9f73d9afc417549&location=s_8fd60a2440cbff54&departure=22.583051374860986%2C88.3427290192081%2Cm_c9f73d9afc417549'));
-
+      ..loadRequest(Uri.parse(widget.url));
     // Initialize the VoiceAssistant
     _voiceAssistant = VoiceAssistant(
       isVoiceAssistantEnabled: true,
