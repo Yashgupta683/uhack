@@ -132,7 +132,8 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => Chatbot()));
         },
-        child: const Icon(Icons.chat),
+        shape: CircleBorder(),
+        child:Icon(Icons.chat),
       ),
     );
   }
@@ -198,7 +199,8 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => Chatbot()));
         },
-        child: const Icon(Icons.chat),
+        shape: CircleBorder(),
+        child:Icon(Icons.chat),
       ),
     );
   }
@@ -263,7 +265,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => Chatbot()));
         },
-        child: const Icon(Icons.chat),
+        shape: CircleBorder(),
+        child:Icon(Icons.chat),
       ),
 
     );

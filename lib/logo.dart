@@ -2,7 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:kodikzee2024/homepage.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:kodikzee2024/const.dart';
 void main(){
+  Gemini.init( apiKey: GEMINI_API_KEY);
   runApp(const Yatripath());
 }
 

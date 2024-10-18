@@ -16,7 +16,9 @@ class NavigationState extends State<Navigation> {
   MediaQueryData? mediaQuery;
   late WebViewController controller;
   late VoiceAssistant _voiceAssistant;
-  bool isVoiceAssistantEnabled = false; // Track if the voice assistant is enabled
+  bool isVoiceAssistantEnabled = false;// Track if the voice assistant is enabled
+
+  String url='';
 
   @override
   void didChangeDependencies() {
@@ -27,6 +29,8 @@ class NavigationState extends State<Navigation> {
   @override
   void initState() {
     super.initState();
+
+
 
     // Initialize WebViewController
     controller = WebViewController()
@@ -48,8 +52,7 @@ class NavigationState extends State<Navigation> {
           },
         ),
       )
-      ..loadRequest(Uri.parse(
-          'https://app.mappedin.com/map/66eafe82ecc9c8000baa8eb4/directions?floor=m_c9f73d9afc417549&location=s_8fd60a2440cbff54&departure=22.583051374860986%2C88.3427290192081%2Cm_c9f73d9afc417549'));
+      ..loadRequest(Uri.parse('https://app.mappedin.com/map/66eafe82ecc9c8000baa8eb4/directions?floor=m_c9f73d9afc417549&location=s_8fd60a2440cbff54&departure=22.583051374860986%2C88.3427290192081%2Cm_c9f73d9afc417549'));
 
     // Initialize the VoiceAssistant
     _voiceAssistant = VoiceAssistant(
@@ -84,7 +87,8 @@ class NavigationState extends State<Navigation> {
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => Chatbot()));
           },
-          child: const Icon(Icons.chat),
+          shape: CircleBorder(),
+          child:Icon(Icons.chat),
         ),
       ),
     );

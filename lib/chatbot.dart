@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 
 class Chatbot extends StatefulWidget{
   const Chatbot({super.key});
@@ -10,19 +12,12 @@ class Chatbot extends StatefulWidget{
 
 }
 class ChatbotState extends State<Chatbot>{
-  final TextEditingController _controller = TextEditingController();
-  List<String> _messages = [];
+  final Gemini gemini = Gemini.instance;
 
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      setState(() {
-        _messages.add(_controller.text); // Add user message to the list
-        _messages.add("Bot: This is a simulated response."); // Simulated bot response
-        _controller.clear(); // Clear the input field after sending
-      });
-    }
-  }
+  List<ChatMessage> messages = [];
 
+  ChatUser currentUser = ChatUser(id: "0", firstName: "User");
+  ChatUser geminiUser = ChatUser(id: "1", firstName: "Gemini");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,39 +25,52 @@ class ChatbotState extends State<Chatbot>{
         title: const Text('Chatbot'),
         backgroundColor: Colors.teal,
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView.builder(
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_messages[index]),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: 'Enter a message...',
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: _sendMessage, // Call the send message function
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      body:_buildUI(),
     );
+  }
+
+  Widget _buildUI(){
+    return DashChat(
+        currentUser: currentUser,
+        onSend: _sendMessage,
+        messages: messages
+    );
+  }
+
+  void _sendMessage(ChatMessage chatMessage){
+    setState(() {
+      messages = [chatMessage, ...messages];
+    });
+    try{
+      String question = chatMessage.text;
+      gemini.streamGenerateContent(question).listen((event){
+        ChatMessage? lastMessage = messages.firstOrNull;
+        if (lastMessage != null && lastMessage.user == geminiUser){
+          lastMessage = messages.removeAt(0);
+          String response = event.content?.parts?.
+          fold("", (previous, current) => "$previous ${current.text}") ?? "";
+          lastMessage.text += response;
+          setState(() {
+            messages = [lastMessage!, ...messages];
+          });
+
+        }else{
+          String response = event.content?.parts?.
+          fold("", (previous, current) => "$previous ${current.text}") ?? "";
+
+          ChatMessage message = ChatMessage(
+              user: geminiUser,
+              createdAt: DateTime.now(),
+              text: response
+          );
+          setState(() {
+            messages = [message, ...messages];
+          });
+        }
+
+      });
+    }catch(e) {
+      print(e);
+    }
   }
 }

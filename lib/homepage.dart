@@ -343,7 +343,7 @@ class HomepageState extends State<Homepage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const Navigation()), // Navigate to Navigation
+                            builder: (context) => const Navigation()), // Navigate to TicketDetails
                       );
                     },
                   ),
@@ -354,7 +354,7 @@ class HomepageState extends State<Homepage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const Livenavigation()), // Navigate to LiveNavigation
+                            builder: (context) => const Livenavigation()), // Navigate to TicketDetails
                       );
                     },
                   ),
@@ -431,7 +431,9 @@ class HomepageState extends State<Homepage> {
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => Chatbot()));
         },
-        child: const Icon(Icons.chat),
+        shape: CircleBorder(),
+        child:Icon(Icons.chat),
+
       ),
     );
   }

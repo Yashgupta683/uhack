@@ -99,7 +99,8 @@ class ScanQRPageState extends State<ScanQRPage> {
             MaterialPageRoute(builder: (context) => Chatbot()),
           );
         },
-        child: const Icon(Icons.chat),
+        shape: CircleBorder(),
+        child:Icon(Icons.chat),
       ),
     );
   }

@@ -92,44 +92,13 @@ class RegisterPageState extends State<RegisterPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Show options for voice assistant or chatbot
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Choose Action'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.mic),
-                    title: const Text('Use Voice Assistant'),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      // Trigger voice assistant to listen for voice commands
-                      _voiceAssistant.listen((recognizedWords) {
-                        print('You said: $recognizedWords');
-                        _voiceAssistant.speak(' $recognizedWords');
-                      });
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.chat),
-                    title: const Text('Open Chatbot'),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      // Navigate to the chatbot screen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Chatbot()),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Chatbot()),
           );
         },
-        child: const Icon(Icons.chat),
+        shape: CircleBorder(),
+        child:Icon(Icons.chat),
       ),
     );
   }

@@ -33,7 +33,8 @@ class TicketDetailState extends State<TicketDetails>{
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => Chatbot()));
         },
-        child: const Icon(Icons.chat),
+        shape: CircleBorder(),
+        child:Icon(Icons.chat),
       ),
     );
   }
