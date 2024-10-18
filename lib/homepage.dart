@@ -354,9 +354,7 @@ class HomepageState extends State<Homepage> {
                                 title: const Text('Allahabad Junction'),
                                 onTap: () {
                                   Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Navigation(url: 'https://app.mappedin.com/map/671212dde85d7e000b52491b/directions?floor=m_d5bbaad8e0f0a65f&location=s_99d839e6c529c48c&departure=25.46219132495936%2C81.82378617955558%2Cm_d5bbaad8e0f0a65f '), // Update with actual URL
+                                    context, MaterialPageRoute(builder: (context) => Navigation(url: 'https://app.mappedin.com/map/671212dde85d7e000b52491b/directions?floor=m_d5bbaad8e0f0a65f&location=s_99d839e6c529c48c&departure=25.46219132495936%2C81.82378617955558%2Cm_d5bbaad8e0f0a65f '), // Update with actual URL
                                     ),
                                   );
                                   },
@@ -393,13 +391,13 @@ class HomepageState extends State<Homepage> {
                               ListTile(
                                 title: const Text('Bareilly Junction'),
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Livenavigation()),); // Update with actual URL
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Livenavigation()),);
                                 },
                               ),
                               ListTile(
                                 title: const Text('Agra Junction'),
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Livenavigation()),); // Update with actual URL
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Livenavigation()),);
                                 },
                               ),
                             ],
