@@ -49,7 +49,7 @@ class HomepageState extends State<Homepage> {
   }
   // Add this method to handle voice command-based navigation
   void _processCommand(String command) {
-    if (command.toLowerCase().contains('qr scanner')) {
+    if (command.toLowerCase().contains('scan qr')) {
       Navigator.push(context, MaterialPageRoute(builder: (context) =>ScanQRPage()));
       _voiceAssistant.speak('Opening QR Scanner');
     } else if (command.toLowerCase().contains('live navigation')) {
