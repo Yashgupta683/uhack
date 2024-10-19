@@ -141,44 +141,32 @@ class HomepageState extends State<Homepage> {
   // Text in different languages
   Map<String, Map<String, String>> languageTexts = {
     'English': {
+      'appbartitle': 'YatriPath',
+      'subtitle': 'Your Station Your Way',
       'title': 'Notifications',
       'trainInfo': 'Train Information',
       'currentStation': 'Current Station',
       'from': 'From',
       'to': 'To',
       'coachNumber': 'Coach Number',
+      'Scan QR': 'Scan QR',
+      '3D Navigation': '3D Navigation',
+      'Live Navigation': 'Live Navigation',
+      'Ticket Details': 'Ticket Details',
     },
     'Hindi': {
+      'appbartitle':'यात्रीपथ',
+      'subtitle': 'आपका स्टेशन आपकी राह',
       'title': 'सूचनाएं',
       'trainInfo': 'ट्रेन जानकारी',
       'currentStation': 'वर्तमान स्टेशन',
       'from': 'से',
       'to': 'तक',
       'coachNumber': 'कोच नंबर',
-    },
-    'Spanish': {
-      'title': 'Notificaciones',
-      'trainInfo': 'Información del Tren',
-      'currentStation': 'Estación Actual',
-      'from': 'De',
-      'to': 'A',
-      'coachNumber': 'Número de Coche',
-    },
-    'French': {
-      'title': 'Notifications',
-      'trainInfo': 'Informations sur le Train',
-      'currentStation': 'Station Actuelle',
-      'from': 'De',
-      'to': 'À',
-      'coachNumber': 'Numéro de Voiture',
-    },
-    'German': {
-      'title': 'Benachrichtigungen',
-      'trainInfo': 'Zuginformationen',
-      'currentStation': 'Aktueller Bahnhof',
-      'from': 'Von',
-      'to': 'Nach',
-      'coachNumber': 'Wagennummer',
+      'Scan QR':'स्कैन क्यूआर',
+      '3D Navigation':'3डी नेविगेशन',
+      'Live Navigation':'लाइव नेविगेशन',
+      'Ticket Details':'टिकट विवरण',
     },
   };
 
@@ -211,19 +199,21 @@ class HomepageState extends State<Homepage> {
           children: [
             Image.asset("assets/images/Untitled.png", width: 50),
             const SizedBox(width: 10),
-            RichText(
-              text: const TextSpan(
+            Flexible(
+              child: RichText(
+              text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Yatriपथ\n', // First line
+                    text: '${languageTexts[selectedLanguage]!['appbartitle']!}\n',
                     style: TextStyle(
                         fontSize: 22, fontWeight: FontWeight.bold), // First line text size
                   ),
                   TextSpan(
-                    text: 'Your Station Your Way', // Second line
+                    text: languageTexts[selectedLanguage]!['subtitle']!, // Second line
                     style: TextStyle(fontSize: 16), // Second line text size
                   ),
                 ],
+              ),
               ),
             ),
           ],
@@ -245,18 +235,6 @@ class HomepageState extends State<Homepage> {
               const PopupMenuItem<String>(
                 value: 'Hindi',
                 child: Text('Hindi'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'Spanish',
-                child: Text('Spanish'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'French',
-                child: Text('French'),
-              ),
-              const PopupMenuItem<String>(
-                value: 'German',
-                child: Text('German'),
               ),
             ],
           ),
@@ -324,7 +302,7 @@ class HomepageState extends State<Homepage> {
                 children: [
                   CircularButton(
                     icon: Icons.qr_code_scanner_outlined,
-                    label: 'Scan QR',
+                    labelKey: 'Scan QR',
                     onTap: () {
                       Navigator.push(
                         context,
@@ -332,10 +310,12 @@ class HomepageState extends State<Homepage> {
                             builder: (context) => const ScanQRPage()), // Navigate to ScanQRPage
                       );
                     },
+                    languageTexts: languageTexts, // Pass languageTexts
+                    selectedLanguage: selectedLanguage, // Pass selectedLanguage
                   ),
                   CircularButton(
                     icon: Icons.map_outlined,
-                    label: '3D Navigation',
+                    labelKey: '3D Navigation',
                     onTap: () {
                       showDialog(
                         context: context,
@@ -364,10 +344,12 @@ class HomepageState extends State<Homepage> {
                         ),
                       );
                     },
+                    languageTexts: languageTexts, // Pass languageTexts
+                    selectedLanguage: selectedLanguage, // Pass selectedLanguage
                   ),
                   CircularButton(
                     icon: Icons.directions,
-                    label: 'Live Navigation',
+                    labelKey: 'Live Navigation',
                     onTap: () {
                       showDialog(
                         context: context,
@@ -405,10 +387,12 @@ class HomepageState extends State<Homepage> {
                         ),
                       );
                     },
+                    languageTexts: languageTexts, // Pass languageTexts
+                    selectedLanguage: selectedLanguage, // Pass selectedLanguage
                   ),
                   CircularButton(
                     icon: Icons.train,
-                    label: 'Ticket Details',
+                    labelKey: 'Ticket Details',
                     onTap: () {
                       Navigator.push(
                         context,
@@ -416,6 +400,8 @@ class HomepageState extends State<Homepage> {
                             builder: (context) => const TicketDetails()), // Navigate to TicketDetails
                       );
                     },
+                    languageTexts: languageTexts, // Pass languageTexts
+                    selectedLanguage: selectedLanguage, // Pass selectedLanguage
                   ),
                 ],
               ),
@@ -489,18 +475,30 @@ class HomepageState extends State<Homepage> {
 
 class CircularButton extends StatelessWidget {
   final IconData icon;
-  final String label;
+  final String labelKey; // Changed to accept a label key
   final Function onTap;
+  final Map<String, Map<String, String>> languageTexts; // Add this
+  final String selectedLanguage; // Add this
 
-  const CircularButton({super.key, required this.icon, required this.label, required this.onTap});
+  const CircularButton({
+    super.key,
+    required this.icon,
+    required this.labelKey, // Accepting label key instead of direct label
+    required this.onTap,
+    required this.languageTexts, // Accept language texts
+    required this.selectedLanguage, // Accept selected language
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onTap(),
-      child: Column(
-        children: [
-          Container(
+    // Get the translated text using the labelKey
+    String translatedLabel = languageTexts[selectedLanguage]![labelKey]!;
+    return Column(
+      children: [
+        InkWell(
+          onTap: () => onTap(),
+          borderRadius: BorderRadius.circular(35), // Make sure the ripple effect respects the circle
+          child: Container(
             height: 70,
             width: 70,
             decoration: BoxDecoration(
@@ -509,10 +507,10 @@ class CircularButton extends StatelessWidget {
             ),
             child: Icon(icon, size: 40, color: Colors.teal.shade900),
           ),
-          const SizedBox(height: 5),
-          Text(label, style: const TextStyle(fontSize: 12)),
-        ],
-      ),
+        ),
+        const SizedBox(height: 5),
+        Text(translatedLabel, style: const TextStyle(fontSize: 12)), // Use the translated text
+      ],
     );
   }
 }
