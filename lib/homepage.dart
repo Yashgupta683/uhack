@@ -454,6 +454,27 @@ class HomepageState extends State<Homepage> {
                         border: const OutlineInputBorder(),
                       ),
                     ),
+                    const SizedBox(height: 20), // Add spacing before the button
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Add the functionality here for submit action
+                          print('Submit button pressed');
+                          // You can capture and process the input data here
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal.shade800, // Set button color
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                        ),
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
