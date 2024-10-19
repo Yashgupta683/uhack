@@ -206,21 +206,29 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
   }
 }
 
+
+
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  State<ForgotPasswordPage> createState() {
+    return _ForgotPasswordPageState();
+  }
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   VoiceAssistant _voiceAssistant = VoiceAssistant(isVoiceAssistantEnabled: true, child: Container(),); // Reuse or pass the instance
+
+  TextEditingController _emailPhoneController = TextEditingController();
+  TextEditingController _otpController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _voiceAssistant.initialize();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,46 +238,91 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Enter your email to reset your password',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              decoration: const InputDecoration(
-                hintText: 'Enter your email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Add functionality to send password reset link
-                  print('Password reset link sent');
-                },
-                child: const Text('Reset Password'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+        child: SingleChildScrollView( // To handle overflow
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Center(
+                child: Text(
+                  'Yatriपथ',
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 30),
+
+              // Username/Phone no./Email
+              const Text(
+                'Username/Phone no/Email',
+                style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _emailPhoneController,
+                decoration: const InputDecoration(
+                  hintText: 'Enter username, phone no, or email',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Informational Text (Placeholder for any additional info)
+              const Text(
+                'Informational Text',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              const SizedBox(height: 16),
+
+              // OTP
+              const Text(
+                'Enter OTP',
+                style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _otpController,
+                      maxLength: 4,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        hintText: '****',
+                        counterText: "",
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Submit Button
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Add functionality to verify OTP and reset password
+                    print('Submit OTP and Reset');
+                  },
+                  child: const Text('Submit'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 16),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => Chatbot()));
         },
-        shape: CircleBorder(),
-        child:Icon(Icons.chat),
+        shape: const CircleBorder(),
+        child: const Icon(Icons.chat),
       ),
-
     );
   }
 }
-
