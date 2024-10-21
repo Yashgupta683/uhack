@@ -24,7 +24,7 @@ class LiveNavigationState extends State<Livenavigation>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Line Navigation'),
+        title: const Text('Live Navigation'),
       ),
       body: Container(
         color: Colors.teal

@@ -4,6 +4,7 @@ import 'package:kodikzee2024/voiceas.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart'; // For haptic feedback
 
 class ScanQRPage extends StatefulWidget {
   const ScanQRPage({super.key});
@@ -20,31 +21,30 @@ class ScanQRPageState extends State<ScanQRPage> {
     child: Container(),
   );
 
-  bool flashOn = false; // Toggle for flash
-  MobileScannerController cameraController = MobileScannerController(); // Controller for the camera
+  bool flashOn = false;
+  MobileScannerController cameraController = MobileScannerController();
+  bool isProcessingBarcode = false; // Control to avoid multiple detections
+  bool isScanning = true; // Indicates whether scanning is in progress
 
   @override
   void initState() {
     super.initState();
     _voiceAssistant.initialize();
-    _requestCameraPermission(); // Request camera permission on initialization
+    _requestCameraPermission();
   }
 
   Future<void> _requestCameraPermission() async {
     var status = await Permission.camera.status;
 
     if (status.isGranted) {
-      // Permission granted, proceed with scanning
-    } else if (status.isDenied) {
-      // Show a permission popup dialog
+      cameraController.start(); // Start the camera only when permission is granted
+    } else if (status.isDenied || status.isRestricted) {
       _showPermissionDialog();
     } else if (status.isPermanentlyDenied) {
-      // The user has permanently denied access, redirect to settings
       _showSettingsDialog();
     }
   }
 
-  // Show dialog if permission is denied
   void _showPermissionDialog() {
     showDialog(
       context: context,
@@ -58,7 +58,7 @@ class ScanQRPageState extends State<ScanQRPage> {
                 Navigator.of(context).pop();
                 var permission = await Permission.camera.request();
                 if (permission.isGranted) {
-                  // Proceed with scanning
+                  cameraController.start(); // Start camera after permission is granted
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Camera permission denied')),
@@ -69,7 +69,7 @@ class ScanQRPageState extends State<ScanQRPage> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text('Deny'),
             ),
@@ -79,7 +79,6 @@ class ScanQRPageState extends State<ScanQRPage> {
     );
   }
 
-  // Show dialog if permission is permanently denied
   void _showSettingsDialog() {
     showDialog(
       context: context,
@@ -91,13 +90,13 @@ class ScanQRPageState extends State<ScanQRPage> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                openAppSettings(); // Redirect user to app settings
+                openAppSettings();
               },
               child: const Text('Open Settings'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text('Cancel'),
             ),
@@ -111,17 +110,51 @@ class ScanQRPageState extends State<ScanQRPage> {
   void _toggleFlash() {
     setState(() {
       flashOn = !flashOn;
-      flashOn ? cameraController.toggleTorch() : cameraController.toggleTorch();
+      cameraController.toggleTorch(); // Toggle the torch once
     });
+  }
+
+  // Throttle the QR code scanning to prevent multiple triggers
+  void _processBarcode(String code) {
+    if (!isProcessingBarcode) {
+      isProcessingBarcode = true;
+      setState(() {
+        isScanning = false; // Stop scanning when QR is detected
+      });
+
+      if (Uri.tryParse(code)?.hasScheme ?? false) {
+        _launchURL(code); // Launch URL if valid
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Scanned code: $code')),
+        );
+      }
+
+      // Haptic feedback on successful QR scan
+      HapticFeedback.lightImpact();
+
+      // Voice feedback
+      _voiceAssistant.speak("QR code scanned successfully");
+
+      // Delay subsequent barcode processing for a brief period
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          isProcessingBarcode = false;
+          isScanning = true; // Resume scanning
+        });
+      });
+    }
   }
 
   // Function to launch URL in the browser
   Future<void> _launchURL(String url) async {
-    final Uri uri = Uri.parse(url); // Convert the string URL to a Uri
-    if (await canLaunchUrl(uri)) { // Use canLaunchUrl instead of canLaunch
-      await launchUrl(uri); // Use launchUrl instead of launch
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      throw 'Could not launch $url';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not launch $url')),
+      );
     }
   }
 
@@ -141,41 +174,47 @@ class ScanQRPageState extends State<ScanQRPage> {
               final List<Barcode> barcodes = barcodeCapture.barcodes;
               for (var barcode in barcodes) {
                 final String code = barcode.rawValue ?? 'Unknown';
-                if (Uri.tryParse(code)?.hasScheme ?? false) {
-                  // If the scanned code is a valid URL, launch it
-                  _launchURL(code);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Scanned code: $code')),
-                  );
-                }
-                break; // Only process the first detected barcode
+                _processBarcode(code);
+                break;
               }
             },
           ),
-          // Overlay for the scanning effect
+          // Animated scanning line inside the scan frame
           Positioned(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.red, width: 2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const SizedBox(
-                width: 250,
-                height: 250,
-              ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.red, width: 2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const SizedBox(
+                    width: 250,
+                    height: 250,
+                  ),
+                ),
+                AnimatedOpacity(
+                  opacity: isScanning ? 1 : 0,
+                  duration: const Duration(milliseconds: 500),
+                  child: Container(
+                    width: 200,
+                    height: 5,
+                    color: Colors.redAccent,
+                  ),
+                ),
+              ],
             ),
           ),
-          // Flash button
+          // Flash button with icon
           Positioned(
             bottom: 100,
-            child: ElevatedButton(
+            child: IconButton(
               onPressed: _toggleFlash,
-              child: Text(flashOn ? 'Flash Off' : 'Flash On'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              ),
+              icon: Icon(flashOn ? Icons.flash_on : Icons.flash_off, color: Colors.white),
+              iconSize: 50,
+              color: Colors.teal,
+              tooltip: 'Toggle Flash',
             ),
           ),
           // Info text
@@ -190,6 +229,15 @@ class ScanQRPageState extends State<ScanQRPage> {
               ),
             ),
           ),
+          // Scanning status indicator (spinner)
+          if (isProcessingBarcode)
+            Positioned(
+              top: 150,
+              child: CircularProgressIndicator(
+                color: Colors.teal,
+                strokeWidth: 4,
+              ),
+            ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

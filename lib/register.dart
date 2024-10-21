@@ -135,7 +135,7 @@ class RegisterPageState extends State<RegisterPage> {
                   child: const Text('Register'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 32),
                   ),
                 ),
               ),

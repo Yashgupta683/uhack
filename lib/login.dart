@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: const Text('Login'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 32),
                   ),
                 ),
               ),
@@ -149,6 +149,7 @@ class OTPLoginPage extends StatefulWidget {
 class _OTPLoginPageState extends State<OTPLoginPage> {
   VoiceAssistant _voiceAssistant = VoiceAssistant(isVoiceAssistantEnabled: true, child: Container(),);
  // Reuse or pass the instance
+  TextEditingController _otpController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -188,7 +189,49 @@ class _OTPLoginPageState extends State<OTPLoginPage> {
                 child: const Text('Send OTP'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32), // Increased horizontal padding
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // OTP
+            const Text(
+              'Enter OTP',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _otpController,
+                    maxLength: 4,
+                    textAlign: TextAlign.center,
+                    decoration: const InputDecoration(
+                      hintText: '****',
+                      counterText: "",
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Submit Button
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Add functionality to verify OTP and reset password
+                  print('Submit OTP and Reset');
+                },
+                child: const Text('Submit'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 16),
                 ),
               ),
             ),
@@ -308,7 +351,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   child: const Text('Submit'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
-                    padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 16),
+                    padding: const EdgeInsets.symmetric(horizontal:32, vertical: 16),
                   ),
                 ),
               ),

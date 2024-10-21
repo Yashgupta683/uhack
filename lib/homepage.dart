@@ -143,7 +143,6 @@ class HomepageState extends State<Homepage> {
     'English': {
       'appbartitle': 'YatriPath',
       'subtitle': 'Your Station Your Way',
-      'title': 'Notifications',
       'trainInfo': 'Train Information',
       'currentStation': 'Current Station',
       'from': 'From',
@@ -153,11 +152,22 @@ class HomepageState extends State<Homepage> {
       '3D Navigation': '3D Navigation',
       'Live Navigation': 'Live Navigation',
       'Ticket Details': 'Ticket Details',
+      'Logintitle':'Login',
+      'Registertitle':'Register',
+      'UserIDtitle':'UserID',
+      'Voice Assistant On':'Voice Assistant ON',
+      'Voice Assistant Off':'Voice Assistant Off',
+      'Choose Junction':'Choose Junction',
+      'Howrah Junction':'Howrah Junction',
+      'Hazrat Nizamuddin':'Hazrat Nizamuddin',
+      'Kanpur Junction':'Kanpur Junction',
+      'Pune junction':'Pune junction',
+      'Allahabad Junction':'Allahabad Junction',
+      'Submit':'Submit',
     },
     'Hindi': {
       'appbartitle':'यात्रीपथ',
       'subtitle': 'आपका स्टेशन आपकी राह',
-      'title': 'सूचनाएं',
       'trainInfo': 'ट्रेन जानकारी',
       'currentStation': 'वर्तमान स्टेशन',
       'from': 'से',
@@ -167,6 +177,18 @@ class HomepageState extends State<Homepage> {
       '3D Navigation':'3डी नेविगेशन',
       'Live Navigation':'लाइव नेविगेशन',
       'Ticket Details':'टिकट विवरण',
+      'Logintitle':'लॉग इन',
+      'Registertitle':'पंजीकरण करें',
+      'UserIDtitle':'उपयोगकर्ता पहचान',
+      'Voice Assistant On':'वॉयस असिस्टेंट चालू',
+      'Voice Assistant Off':'वॉयस असिस्टेंट बंद',
+      'Choose Junction':'जंक्शन चुनें',
+      'Howrah Junction':'हावड़ा जंक्शन',
+      'Hazrat Nizamuddin':'Hazrat Nizamuddin',
+      'Kanpur Junction':'कानपुर जंक्शन',
+      'Pune junction':'पुणे जंक्शन',
+      'Allahabad Junction':'इलाहबाद जंक्शन',
+      'Submit':'जमा करें',
     },
   };
 
@@ -253,20 +275,24 @@ class HomepageState extends State<Homepage> {
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: 'Option 1',
-                child: Text('Login'),
+                child: Text(
+                  languageTexts[selectedLanguage]!['Logintitle']!,
+                ),
               ),
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: 'Option 2',
-                child: Text('Register'),
+                child: Text(
+                  languageTexts[selectedLanguage]!['Registertitle']!,
+                ),
               ),
               PopupMenuItem<String>(
                 value: 'Option 3',
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(isVoiceAssistantEnabled ? 'Voice Assistant On' : 'Voice Assistant Off'),
+                    Text(isVoiceAssistantEnabled ? languageTexts[selectedLanguage]!['Voice Assistant On']! : languageTexts[selectedLanguage]!['Voice Assistant Off']!),
                     Switch(
                       value: isVoiceAssistantEnabled,
                       onChanged: (bool value) {
@@ -276,9 +302,11 @@ class HomepageState extends State<Homepage> {
                   ],
                 ),
               ),
-              const PopupMenuItem<String>(
+               PopupMenuItem<String>(
                 value: 'Option 4',
-                child: Text('UserID'),
+                child: Text(
+                  languageTexts[selectedLanguage]!['UserIDtitle']!,
+                ),
               ),
             ],
           ),
@@ -292,11 +320,7 @@ class HomepageState extends State<Homepage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                languageTexts[selectedLanguage]!['title']!, // Dynamic title
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -320,24 +344,51 @@ class HomepageState extends State<Homepage> {
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: const Text('Choose Junction'),
+                          title:  Text(languageTexts[selectedLanguage]!['Choose Junction']!,),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               ListTile(
-                                title: const Text('Howrah Junction'),
+                                title: Text(languageTexts[selectedLanguage]!['Howrah Junction']!,),
                                 onTap: () {
                                   Navigator.push(context,MaterialPageRoute(builder: (context)=>Navigation(url:'https://app.mappedin.com/map/66eafe82ecc9c8000baa8eb4/directions?floor=m_c9f73d9afc417549&location=s_8fd60a2440cbff54&departure=22.583051374860986%2C88.3427290192081%2Cm_c9f73d9afc417549'),),);
                                   },
                               ),
                               ListTile(
-                                title: const Text('Allahabad Junction'),
+                                title: Text(languageTexts[selectedLanguage]!['Allahabad Junction']!,),
                                 onTap: () {
                                   Navigator.push(
                                     context, MaterialPageRoute(builder: (context) => Navigation(url: 'https://app.mappedin.com/map/671212dde85d7e000b52491b/directions?floor=m_d5bbaad8e0f0a65f&location=s_99d839e6c529c48c&departure=25.46219132495936%2C81.82378617955558%2Cm_d5bbaad8e0f0a65f '), // Update with actual URL
                                     ),
                                   );
                                   },
+                              ),
+                              ListTile(
+                                title: Text(languageTexts[selectedLanguage]!['Hazrat Nizamuddin']!,),
+                                onTap: () {
+                                  Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => Navigation(url: 'https://app.mappedin.com/map/6713bcf7b9e00d000ba6d5ad'), // Update with actual URL
+                                  ),
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                title: Text(languageTexts[selectedLanguage]!['Pune junction']!,),
+                                onTap: () {
+                                  Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => Navigation(url: 'https://app.mappedin.com/map/6713c9fa4ea1dd000bcb0f6c'), // Update with actual URL
+                                  ),
+                                  );
+                                },
+                              ),
+                              ListTile(
+                                title: Text(languageTexts[selectedLanguage]!['Kanpur Junction']!,),
+                                onTap: () {
+                                  Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => Navigation(url: 'https://app.mappedin.com/map/6713d1088224dc000b392f28'), // Update with actual URL
+                                  ),
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -351,41 +402,7 @@ class HomepageState extends State<Homepage> {
                     icon: Icons.directions,
                     labelKey: 'Live Navigation',
                     onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Choose Junction'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                title: const Text('Howrah Junction'),
-                                onTap: () {
-                                  Navigator.push(context,MaterialPageRoute(builder: (context)=>Livenavigation()),);
-                                },
-                              ),
-                              ListTile(
-                                title: const Text('Allahabad Junction'),
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Livenavigation()),);
-                                },
-                              ),
-                              ListTile(
-                                title: const Text('Bareilly Junction'),
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Livenavigation()),);
-                                },
-                              ),
-                              ListTile(
-                                title: const Text('Agra Junction'),
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Livenavigation()),);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Livenavigation()),);
                     },
                     languageTexts: languageTexts, // Pass languageTexts
                     selectedLanguage: selectedLanguage, // Pass selectedLanguage
@@ -467,7 +484,7 @@ class HomepageState extends State<Homepage> {
                           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                         ),
                         child: Text(
-                          'Submit',
+                          languageTexts[selectedLanguage]!['Submit']!,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
