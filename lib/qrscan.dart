@@ -114,7 +114,7 @@ class ScanQRPageState extends State<ScanQRPage> {
     });
   }
 
-  // Throttle the QR code scanning to prevent multiple triggers
+  // Process the QR code and display a dialog with clickable link if it's a valid URL
   void _processBarcode(String code) {
     if (!isProcessingBarcode) {
       isProcessingBarcode = true;
@@ -123,7 +123,7 @@ class ScanQRPageState extends State<ScanQRPage> {
       });
 
       if (Uri.tryParse(code)?.hasScheme ?? false) {
-        _launchURL(code); // Launch URL if valid
+        _showUrlDialog(Uri.parse(code)); // Show URL dialog if valid
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Scanned code: $code')),
@@ -146,8 +146,49 @@ class ScanQRPageState extends State<ScanQRPage> {
     }
   }
 
-  // Function to launch URL in the browser
-  Future<void> _launchURL(String url) async {
+  // Show a dialog with a clickable link
+  void _showUrlDialog(Uri url) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Scanned URL'),
+          content: GestureDetector(
+            onTap: () async {
+              if (await canLaunchUrl(url)) {
+                final bool launched = await launchUrl(
+                  url,
+                  mode: LaunchMode.externalApplication, // Explicitly open in external browser
+                );
+                if (!launched) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Failed to open URL')),
+                  );
+                }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not launch URL')),
+                );
+              }
+            },
+            child: Text(
+              url.toString(),
+              style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  Future<void> launchURL(String url) async {
     final Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);

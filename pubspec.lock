@@ -345,7 +345,7 @@ packages:
     source: hosted
     version: "4.3.0"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
@@ -958,7 +958,7 @@ packages:
     source: hosted
     version: "4.10.0"
   webview_flutter_android:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: webview_flutter_android
       sha256: "74693a212d990b32e0b7055d27db973a18abf31c53942063948cdfaaef9787ba"

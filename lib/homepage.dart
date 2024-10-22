@@ -145,8 +145,8 @@ class HomepageState extends State<Homepage> {
       'subtitle': 'Your Station Your Way',
       'trainInfo': 'Train Information',
       'currentStation': 'Current Station',
-      'from': 'From',
-      'to': 'To',
+      'Source station': 'Source station',
+      'Destination station': 'Destination station',
       'coachNumber': 'Coach Number',
       'Scan QR': 'Scan QR',
       '3D Navigation': '3D Navigation',
@@ -164,14 +164,15 @@ class HomepageState extends State<Homepage> {
       'Pune junction':'Pune junction',
       'Allahabad Junction':'Allahabad Junction',
       'Submit':'Submit',
+      'Navigation Options':'Navigation Options'
     },
     'Hindi': {
       'appbartitle':'यात्रीपथ',
       'subtitle': 'आपका स्टेशन आपकी राह',
       'trainInfo': 'ट्रेन जानकारी',
       'currentStation': 'वर्तमान स्टेशन',
-      'from': 'से',
-      'to': 'तक',
+      'Source station': 'स्रोत स्टेशन',
+      'Destination station': 'गंतव्य स्टेशन',
       'coachNumber': 'कोच नंबर',
       'Scan QR':'स्कैन क्यूआर',
       '3D Navigation':'3डी नेविगेशन',
@@ -189,6 +190,7 @@ class HomepageState extends State<Homepage> {
       'Pune junction':'पुणे जंक्शन',
       'Allahabad Junction':'इलाहबाद जंक्शन',
       'Submit':'जमा करें',
+      'Navigation Options':'नेविगेशन विकल्प'
     },
   };
 
@@ -358,7 +360,7 @@ class HomepageState extends State<Homepage> {
                                 title: Text(languageTexts[selectedLanguage]!['Allahabad Junction']!,),
                                 onTap: () {
                                   Navigator.push(
-                                    context, MaterialPageRoute(builder: (context) => Navigation(url: 'https://app.mappedin.com/map/671212dde85d7e000b52491b/directions?floor=m_d5bbaad8e0f0a65f&location=s_99d839e6c529c48c&departure=25.46219132495936%2C81.82378617955558%2Cm_d5bbaad8e0f0a65f '), // Update with actual URL
+                                    context, MaterialPageRoute(builder: (context) => Navigation(url: 'https://app.mappedin.com/map/671212dde85d7e000b52491b/directions?floor=m_d5bbaad8e0f0a65f&location=s_79bbd5819c5dc995&departure=25.46218151505147%2C81.82372359855533%2Cm_d5bbaad8e0f0a65f'), // Update with actual URL
                                     ),
                                   );
                                   },
@@ -437,8 +439,12 @@ class HomepageState extends State<Homepage> {
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
-                    Text(languageTexts[selectedLanguage]!['currentStation']!,
-                        style: const TextStyle(fontSize: 16)),
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: languageTexts[selectedLanguage]!['currentStation']!, // Use the corresponding label from the map
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -446,7 +452,7 @@ class HomepageState extends State<Homepage> {
                         Expanded(
                           child: TextField(
                             decoration: InputDecoration(
-                              labelText: languageTexts[selectedLanguage]!['from']!,
+                              labelText: languageTexts[selectedLanguage]!['Source station']!,
                               border: const OutlineInputBorder(),
                             ),
                           ),
@@ -457,7 +463,7 @@ class HomepageState extends State<Homepage> {
                         Expanded(
                           child: TextField(
                             decoration: InputDecoration(
-                              labelText: languageTexts[selectedLanguage]!['to']!,
+                              labelText: languageTexts[selectedLanguage]!['Destination station']!,
                               border: const OutlineInputBorder(),
                             ),
                           ),
@@ -471,28 +477,55 @@ class HomepageState extends State<Homepage> {
                         border: const OutlineInputBorder(),
                       ),
                     ),
-                    const SizedBox(height: 20), // Add spacing before the button
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Add the functionality here for submit action
-                          print('Submit button pressed');
-                          // You can capture and process the input data here
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal.shade800, // Set button color
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-                        ),
-                        child: Text(
-                          languageTexts[selectedLanguage]!['Submit']!,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
+
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20), // Add spacing before the button
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title:  Text(languageTexts[selectedLanguage]!['Navigation Options']!,),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              title: Text(languageTexts[selectedLanguage]!['3D Navigation']!,),
+                              onTap: () {
+                                Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => Navigation(url: 'https://app.mappedin.com/map/6713bcf7b9e00d000ba6d5ad'), // Update with actual URL
+                                ),
+                                );
+                              },
+                            ),
+                            ListTile(
+                              title: Text(languageTexts[selectedLanguage]!['Live Navigation']!,),
+                              onTap: () {
+                                Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => Livenavigation()
+                                ),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal.shade800, // Set button color
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                  ),
+                  child: Text(
+                    languageTexts[selectedLanguage]!['Submit']!,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],
